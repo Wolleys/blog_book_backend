@@ -13,7 +13,7 @@ const connect = async () => {
         );
         console.log("MongoDB: Connection successfull");
     } catch (err) {
-        throw new Error("MySQL: Connection not successfull", err);
+        throw new Error("MongoDB: Connection not successfull", err);
     }
 };
 
