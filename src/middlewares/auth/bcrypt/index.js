@@ -14,11 +14,8 @@ const hashPassword = async (password) => {
 // Validate the supplied user password
 const validatePassword = async (password, dbPassword) => {
     try {
-        const match = await bcrypt.compare(password, dbPassword);
-        if (!match) {
-            throw { status: 400, message: "Invalid credentials" };
-        }
-        return match;
+        const validate = await bcrypt.compare(password, dbPassword);
+        return validate;
     } catch (error) {
         throw error;
     }
