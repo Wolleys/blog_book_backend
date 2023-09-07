@@ -24,7 +24,7 @@ router.put("/:id", async (req, res) => {
             res.status(500).json(err);
         }
     } else {
-        res.status(401).json("You are not the author!");
+        res.status(401).json("This is not your account!");
     }
 });
 
