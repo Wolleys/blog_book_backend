@@ -2,14 +2,18 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
+const path = require("path");
 const server = require("./config/server");
 const routes = require("./v1/routes");
 
-// Built-in json body parser middleware
+// Middlewares
 app.use(express.json());
 
-// App routes
+// Serve static files from the 'uploads' folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Routes
 app.use(routes);
 
-// Start server and connect DB
+// Start server and set up MongoDB connection
 server(app);
