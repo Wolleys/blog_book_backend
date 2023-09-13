@@ -1,11 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../../../models/Post");
+const upload = require("../../../middlewares/upload");
 
 //CREATE
-router.post("/", async (req, res) => {
-    const newPost = new Post(req.body);
+router.post("/", upload.single("post"), async (req, res) => {
+    let image;
+    const { title, desc, username, categories } = req.body;
+
     try {
+        image = req.file;
+        if (!image) {
+            return res.status(400).json({ error: "Select a photo to upload" });
+        }
+
+        const newPost = new Post({
+            title,
+            desc,
+            username,
+            categories: categories || [],
+            photo: image.filename,
+        });
+
         const savedPost = await newPost.save();
         res.status(200).json(savedPost);
     } catch (err) {
