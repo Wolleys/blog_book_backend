@@ -2,20 +2,26 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../../models/User");
 const Post = require("../../../models/Post");
+const upload = require("../../../middlewares/upload");
 const { hashPassword } = require("../../../middlewares/auth/bcrypt");
 
 //UPDATE
-router.put("/:id", async (req, res) => {
-    const userId = req.params.id;
-    if (req.body.userId === userId) {
+router.put("/:id", upload.single("profile"), async (req, res) => {
+    let image;
+    const paramId = req.params.id;
+    const { userId, username, email, password } = req.body;
+
+    if (userId === paramId) {
         try {
-            const hashedPass = await hashPassword(req.body.password);
+            image = req.file;
+            const hashedPass = await hashPassword(password);
             const updatedUser = await User.findByIdAndUpdate(
-                userId,
+                paramId,
                 {
-                    username: req.body.username,
-                    email: req.body.email,
+                    email,
+                    username,
                     password: hashedPass,
+                    profilePic: image.filename,
                 },
                 { new: true }
             );
