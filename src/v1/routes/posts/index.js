@@ -30,16 +30,28 @@ router.post("/", upload.single("post"), async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", async (req, res) => {
-    const postId = req.params.id;
+router.put("/:id", upload.single("post"), async (req, res) => {
+    let image;
+    const paramId = req.params.id;
+    const { title, desc, username, categories } = req.body;
+
     try {
-        const post = await Post.findById(postId);
-        if (post.username === req.body.username) {
+        image = req.file;
+        if (!image) {
+            return res.status(400).json({ error: "Select a photo to upload" });
+        }
+
+        const post = await Post.findById(paramId);
+        if (post.username === username) {
             try {
                 const updatedPost = await Post.findByIdAndUpdate(
-                    postId,
+                    paramId,
                     {
-                        $set: req.body,
+                        title,
+                        desc,
+                        username,
+                        categories: categories || [],
+                        photo: image.filename,
                     },
                     { new: true }
                 );
@@ -57,12 +69,12 @@ router.put("/:id", async (req, res) => {
 
 //DELETE
 router.delete("/:id", async (req, res) => {
-    const postId = req.params.id;
+    const paramId = req.params.id;
     try {
-        const post = await Post.findById(postId);
+        const post = await Post.findById(paramId);
         if (post.username === req.body.username) {
             try {
-                await Post.findByIdAndDelete(postId);
+                await Post.findByIdAndDelete(paramId);
                 res.status(200).json("Post has been deleted!");
             } catch (err) {
                 res.status(500).json(err);
@@ -77,9 +89,9 @@ router.delete("/:id", async (req, res) => {
 
 //GET POST
 router.get("/:id", async (req, res) => {
-    const postId = req.params.id;
+    const paramId = req.params.id;
     try {
-        const post = await Post.findById(postId);
+        const post = await Post.findById(paramId);
         if (!post) {
             return res.status(404).json("Post not found!");
         }
