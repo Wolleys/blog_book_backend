@@ -5,6 +5,7 @@ const router = express.Router();
 const v1AuthRouter = require("./auth");
 const v1UserRouter = require("./users");
 const v1PostRouter = require("./posts");
+const v1UploadRouter = require("./upload");
 const v1CategoryRouter = require("./categories");
 const v1ProfilePicRouter = require("./profilePic");
 
@@ -12,6 +13,7 @@ const v1ProfilePicRouter = require("./profilePic");
 router.use("/api/v1/auth", v1AuthRouter);
 router.use("/api/v1/users", v1UserRouter);
 router.use("/api/v1/posts", v1PostRouter);
+router.use("/api/v1/upload", v1UploadRouter);
 router.use("/api/v1/profile", v1ProfilePicRouter);
 router.use("/api/v1/categories", v1CategoryRouter);
 
