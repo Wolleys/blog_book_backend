@@ -15,12 +15,25 @@ router.post("/", async (req, res) => {
 
 //UPDATE
 router.put("/:id", async (req, res) => {
+    const categoryId = req.params.id;
     const { name } = req.body;
-    const paramId = req.params.id;
+
     try {
-        res.status(200).json(paramId);
+        // Find the category by ID
+        const existingCategory = await Category.findById(categoryId);
+
+        if (!existingCategory) {
+            return res.status(404).json({ error: "Category not found" });
+        }
+
+        // Update the category's name
+        existingCategory.name = name;
+        const updatedCategory = await existingCategory.save();
+
+        res.status(200).json(updatedCategory);
     } catch (err) {
-        res.status(500).json(err);
+        // Handle other errors here
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
